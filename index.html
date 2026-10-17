@@ -32,7 +32,7 @@ body {
   padding-block: 24px 40px;
 }
 .wrap { max-width: 460px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.top { display: flex; justify-content: center; align-items: center; }
 .brand { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: -0.01em; }
 .brand span { color: var(--accent); }
 .tag { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
@@ -65,8 +65,12 @@ h2 { font-size: 20px; line-height: 1.25; }
 .kit span { color: var(--muted); font-size: 14px; }
 .saves { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
 .note { border-left: 3px solid var(--accent); padding: 6px 0 6px 12px; color: var(--fg); font-size: 15px; }
-.coupon { border: 2px dashed var(--accent); border-radius: 16px; padding: 18px; text-align: center; display: flex; flex-direction: column; gap: 6px; }
+.coupon { border: 2px dashed var(--accent); border-radius: 16px; padding: 18px; text-align: center; display: flex; flex-direction: column; gap: 8px; }
 .code { font-family: var(--font-display); font-size: 22px; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.coupon-save { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--accent); }
+.coupon-price { font-size: 15px; color: var(--fg); display: flex; align-items: center; justify-content: center; gap: 8px; }
+.coupon-price b { font-weight: 700; }
+.coupon-price del { color: var(--muted); text-decoration: line-through; }
 .small { font-size: 13px; color: var(--muted); }
 footer { font-size: 12px; color: var(--muted); text-align: center; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -107,17 +111,17 @@ const Q = [
 ];
 
 const KITS = {
-  estudiar: { name: "Kit Estudiar", price: "S/ 2,047", coupon: "S/ 80", items: [
+  estudiar: { name: "Kit Estudiar", price: "S/ 2,047", discountPrice: "S/ 1,967", coupon: "S/ 80", items: [
       ["HONOR X7e + YOYO", "Graba la clase y convierte la foto de la pizarra en PPT"],
       ["HONOR Pad X8b", "Recibe tus apuntes para repasarlos en pantalla grande"],
       ["HONOR Earbuds A Pro", "Cancelación de ruido para estudiar en cualquier lado"] ],
     saves: ["Copiar la pizarra a mano", "Mandarte fotos por WhatsApp para verlas en grande", "El ruido de la cafetería"] },
-  crear: { name: "Kit Crear", price: "S/ 1,747", coupon: "S/ 80", items: [
+  crear: { name: "Kit Crear", price: "S/ 1,747", discountPrice: "S/ 1,667", coupon: "S/ 80", items: [
       ["HONOR 400 Lite", "Cámara de 108 MP con IA para fotos y video"],
       ["HONOR Earbuds A Pro", "Escucha tus cortes y atiende llamadas claras"],
       ["HONOR Choice Watch 2i", "Avisos del celular en la muñeca mientras grabas"] ],
     saves: ["Pasar archivos con cable o por correo a tu laptop", "Esperar a llegar a casa para editar", "Perder la mejor toma del día"] },
-  moverse: { name: "Kit Moverse", price: "S/ 1,497", coupon: "S/ 80", items: [
+  moverse: { name: "Kit Moverse", price: "S/ 1,497", discountPrice: "S/ 1,417", coupon: "S/ 80", items: [
       ["HONOR X8d", "Batería grande para todo el día"],
       ["HONOR Choice Watch 2i", "Avisos, deporte y sueño en la muñeca"],
       ["HONOR Earbuds A Pro", "Música y llamadas en la combi sin ruido"] ],
@@ -180,7 +184,7 @@ function renderResult() {
       : `Ya tienes la pieza central. Súmale ${FIRST_PIECE[m]} y tu celular empieza a conectar tu día.`;
   app.innerHTML = `
     <h2>Lo que más se te corta es ${esc(cut)}. Este kit lo resuelve.</h2>
-    <div><b>${kit.name}</b> · ${kit.price} a precio normal</div>
+    <div><b>${kit.name}</b></div>
     <ul class="kit">${kit.items.map(x => `<li><b>${esc(x[0])}</b><span>${esc(x[1])}</span></li>`).join("")}</ul>
     <div><b>Cortes que te ahorras</b></div>
     <ul class="saves">${kit.saves.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
@@ -188,6 +192,8 @@ function renderResult() {
     <div class="coupon">
       <div class="small">Tu Cupón</div>
       <div class="code" id="code">${code()}</div>
+      <div class="coupon-save">Ahorras ${kit.coupon}</div>
+      <div class="coupon-price">Pagas <b>${kit.discountPrice}</b> <del>${kit.price}</del></div>
       <div class="small">${kit.name} en Coolbox y HONOR Store</div>
     </div>
     <div class="note">Pruébalo antes de comprar: pide la <b>Mochila Sin Cortes</b> y vive el kit completo durante 7 días.</div>
