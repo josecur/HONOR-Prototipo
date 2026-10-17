@@ -1,0 +1,202 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Test Sin Cortes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: una columna tipo app móvil; tarjeta de pregunta, opciones grandes, resultado como "ticket" de kit */
+:root {
+  --bg: #F3F5FA;
+  --surface: #FFFFFF;
+  --fg: #141821;
+  --muted: #5B6375;
+  --line: #DCE1EC;
+  --accent: #1A5CFF;
+  --accent-soft: #E7EEFF;
+  --font-display: "Unbounded", "Figtree", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E121A; --surface: #171C27; --fg: #EEF1F7; --muted: #A2AABB; --line: #2A3242;
+    --accent: #6F97FF; --accent-soft: #1D2A4A; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E121A; --surface: #171C27; --fg: #EEF1F7; --muted: #A2AABB; --line: #2A3242;
+  --accent: #6F97FF; --accent-soft: #1D2A4A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 40px;
+}
+.wrap { max-width: 460px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: -0.01em; }
+.brand span { color: var(--accent); }
+.tag { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.lead { color: var(--muted); margin: 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+.progress { display: flex; gap: 6px; }
+.progress i { flex: 1; height: 5px; border-radius: 3px; background: var(--line); }
+.progress i.on { background: var(--accent); }
+.step { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+h1, h2 { font-family: var(--font-display); font-weight: 500; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: 24px; line-height: 1.2; }
+h2 { font-size: 20px; line-height: 1.25; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt {
+  font: inherit; font-weight: 500; text-align: left; color: var(--fg); background: var(--surface);
+  border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 16px; cursor: pointer; transition: border-color .15s, background .15s;
+}
+.opt:hover { border-color: var(--accent); }
+.opt:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+.row { display: flex; gap: 10px; }
+.btn { font: inherit; font-weight: 700; border-radius: 999px; padding: 13px 20px; cursor: pointer; border: 1.5px solid var(--accent); }
+.btn.primary { background: var(--accent); color: var(--surface); flex: 1; }
+.btn.primary:disabled { opacity: .4; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.moment { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 700; }
+.kit { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.kit li { display: grid; grid-template-columns: 1fr; gap: 2px; padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); }
+.kit b { font-weight: 700; }
+.kit span { color: var(--muted); font-size: 14px; }
+.saves { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.note { border-left: 3px solid var(--accent); padding: 6px 0 6px 12px; color: var(--fg); font-size: 15px; }
+.coupon { border: 2px dashed var(--accent); border-radius: 16px; padding: 18px; text-align: center; display: flex; flex-direction: column; gap: 6px; }
+.code { font-family: var(--font-display); font-size: 22px; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.small { font-size: 13px; color: var(--muted); }
+footer { font-size: 12px; color: var(--muted); text-align: center; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div class="brand">Sin <span>Cortes</span></div>
+  </div>
+  <p class="lead" id="lead">Cinco preguntas sobre tu día. Al final te decimos qué combinación de equipos haría que tu día no se corte.</p>
+  <section class="card" id="app" aria-live="polite"></section>
+  <footer>Prototipo de equipo para HONOR College 2026. Y ningún cupón es real y no se guarda ninguna respuesta.</footer>
+</div>
+
+<script>
+const Q = [
+  { q: "¿Dónde pasas más horas en un día normal?", o: [
+    ["En clase o en la biblioteca", { estudiar: 2 }],
+    ["En la calle, la combi o el bus", { moverse: 2 }],
+    ["En prácticas o en el trabajo", { estudiar: 1, moverse: 1 }],
+    ["Grabando, diseñando o editando", { crear: 2 }] ] },
+  { q: "¿Qué se te corta más seguido?", o: [
+    ["Mis apuntes: quedan regados", { estudiar: 2 }],
+    ["La batería", { moverse: 2 }],
+    ["La concentración", { estudiar: 1, moverse: 1 }],
+    ["Pasar archivos de un equipo a otro", { crear: 2 }] ] },
+  { q: "¿Cómo estudias o trabajas?", o: [
+    ["En cuaderno o con fotos de la pizarra", { estudiar: 2 }],
+    ["En laptop", { crear: 1, estudiar: 1 }],
+    ["Desde el celular, donde sea", { moverse: 1 }],
+    ["Grabando audios o videos", { crear: 1, estudiar: 1 }] ] },
+  { q: "¿Haces deporte o caminas mucho?", o: [
+    ["Varias veces por semana", { moverse: 2 }],
+    ["De vez en cuando", { moverse: 1 }],
+    ["Casi nunca", {}] ] },
+  { q: "¿Qué celular tienes hoy?", o: [
+    ["Un HONOR", {}], ["Otro Android", {}], ["Un iPhone", {}] ], key: "phone" }
+];
+
+const KITS = {
+  estudiar: { name: "Kit Estudiar", price: "S/ 2,047", coupon: "S/ 80", items: [
+      ["HONOR X7e + YOYO", "Graba la clase y convierte la foto de la pizarra en PPT"],
+      ["HONOR Pad X8b", "Recibe tus apuntes para repasarlos en pantalla grande"],
+      ["HONOR Earbuds A Pro", "Cancelación de ruido para estudiar en cualquier lado"] ],
+    saves: ["Copiar la pizarra a mano", "Mandarte fotos por WhatsApp para verlas en grande", "El ruido de la cafetería"] },
+  crear: { name: "Kit Crear", price: "S/ 1,747", coupon: "S/ 80", items: [
+      ["HONOR 400 Lite", "Cámara de 108 MP con IA para fotos y video"],
+      ["HONOR Earbuds A Pro", "Escucha tus cortes y atiende llamadas claras"],
+      ["HONOR Choice Watch 2i", "Avisos del celular en la muñeca mientras grabas"] ],
+    saves: ["Pasar archivos con cable o por correo a tu laptop", "Esperar a llegar a casa para editar", "Perder la mejor toma del día"] },
+  moverse: { name: "Kit Moverse", price: "S/ 1,497", coupon: "S/ 80", items: [
+      ["HONOR X8d", "Batería grande para todo el día"],
+      ["HONOR Choice Watch 2i", "Avisos, deporte y sueño en la muñeca"],
+      ["HONOR Earbuds A Pro", "Música y llamadas en la combi sin ruido"] ],
+    saves: ["Sacar el celular para cada aviso", "Olvidar entregas entre prácticas y clases", "No saber cuánto dormiste en parciales"] }
+};
+const FIRST_PIECE = { estudiar: "HONOR Earbuds A Pro (S/ 149)", crear: "HONOR Earbuds A Pro (S/ 149)", moverse: "HONOR Choice Watch 2i (S/ 199)" };
+
+let i = 0; const answers = [];
+const app = document.getElementById("app");
+
+function esc(s) { return s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+function renderQ() {
+  const item = Q[i]; const sel = answers[i];
+  app.innerHTML = `
+    <div class="progress" aria-hidden="true">${Q.map((_, k) => `<i class="${k <= i ? "on" : ""}"></i>`).join("")}</div>
+    <div class="step">Pregunta ${i + 1} de ${Q.length}</div>
+    <h1 id="qtitle">${esc(item.q)}</h1>
+    <div class="opts" role="group" aria-labelledby="qtitle">
+      ${item.o.map((o, k) => `<button class="opt" id="opt-${i}-${k}" type="button" aria-pressed="${sel === k}" data-k="${k}">${esc(o[0])}</button>`).join("")}
+    </div>
+    <div class="row">
+      ${i > 0 ? `<button class="btn ghost" id="back" type="button">Atrás</button>` : ""}
+      <button class="btn primary" id="next" type="button" ${sel === undefined ? "disabled" : ""}>${i === Q.length - 1 ? "Ver mi kit" : "Siguiente"}</button>
+    </div>`;
+  app.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
+    answers[i] = Number(b.dataset.k);
+    app.querySelectorAll(".opt").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+    document.getElementById("next").disabled = false;
+  }));
+  document.getElementById("next").addEventListener("click", () => { if (i < Q.length - 1) { i++; renderQ(); } else renderResult(); });
+  const back = document.getElementById("back"); if (back) back.addEventListener("click", () => { i--; renderQ(); });
+}
+
+function score() {
+  const s = { estudiar: 0, crear: 0, moverse: 0 };
+  answers.forEach((a, k) => { const w = Q[k].o[a][1]; for (const m in w) s[m] += w[m]; });
+  const order = ["estudiar", "crear", "moverse"];
+  // desempate: el momento elegido en "qué se te corta"
+  const tieBreak = Object.keys(Q[1].o[answers[1]][1])[0];
+  return order.reduce((best, m) => (s[m] > s[best] || (s[m] === s[best] && m === tieBreak)) ? m : best, order[0]);
+}
+
+function code() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let c = "";
+  const r = new Uint32Array(4); crypto.getRandomValues(r);
+  r.forEach(n => c += chars[n % chars.length]);
+  return "SINCORTES-" + c;
+}
+
+function renderResult() {
+  document.getElementById("lead").hidden = true;
+  const m = score(); const kit = KITS[m]; const phone = answers[4];
+  const label = { estudiar: "Estudiar", crear: "Crear", moverse: "Moverse" }[m];
+  const cut = Q[1].o[answers[1]][0].toLowerCase();
+  const phoneNote = phone === 2
+    ? `Tienes iPhone y no tienes que cambiarlo. <b>Empieza con una pieza:</b> ${FIRST_PIECE[m]} ya te sirve hoy, y MagicOS comparte fotos y archivos con iPhone y Mac.`
+    : phone === 1
+      ? `Con otro Android también puedes empezar con una pieza: ${FIRST_PIECE[m]}. Si entregas tus audífonos o tu reloj viejo, recibes S/ 20 de descuento.`
+      : `Ya tienes la pieza central. Súmale ${FIRST_PIECE[m]} y tu celular empieza a conectar tu día.`;
+  app.innerHTML = `
+    <h2>Lo que más se te corta es ${esc(cut)}. Este kit lo resuelve.</h2>
+    <div><b>${kit.name}</b> · ${kit.price} a precio normal</div>
+    <ul class="kit">${kit.items.map(x => `<li><b>${esc(x[0])}</b><span>${esc(x[1])}</span></li>`).join("")}</ul>
+    <div><b>Cortes que te ahorras</b></div>
+    <ul class="saves">${kit.saves.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
+    <div class="note">${phoneNote}</div>
+    <div class="coupon">
+      <div class="small">Tu Cupón</div>
+      <div class="code" id="code">${code()}</div>
+      <div class="small">${kit.name} en Coolbox y HONOR Store</div>
+    </div>
+    <div class="note">Pruébalo antes de comprar: pide la <b>Mochila Sin Cortes</b> y vive el kit completo durante 7 días.</div>
+    <div class="row" style="justify-content: center;"><button class="btn ghost" id="again" type="button">Hacer el test otra vez</button></div>`;
+  document.getElementById("again").addEventListener("click", () => {
+    i = 0; answers.length = 0; document.getElementById("lead").hidden = false; renderQ();
+  });
+}
+renderQ();
+</script>
+
+</body></html>
